@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>Mappa LoRa Brescia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mappa interattiva dei nodi LoRaWAN nella provincia di Brescia">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    #map { 
+      height: 100vh; 
+      background: #f5f5f5;
+    }
+    .refresh-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      padding: 8px 15px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .refresh-btn:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+    .refresh-btn:active {
+      transform: translateY(0);
+    }
+    .refresh-btn i {
+      margin-right: 5px;
+    }
+    .map-popup {
+      min-width: 200px;
+      max-width: 300px;
+    }
+    .map-popup b { 
+      display: block; 
+      margin-bottom: 5px; 
+      font-size: 1.1em;
+      color: #333;
+    }
+    .map-popup p { 
+      margin: 5px 0; 
+      line-height: 1.4;
+      color: #555;
+    }
+    .map-popup a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .map-popup a:hover { 
+      text-decoration: underline; 
+    }
+    .status-bar {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 4px;
+      font-size: 13px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+    }
+    .status-bar i {
+      margin-right: 6px;
+    }
+    .status-updating {
+      color: #ff9800;
+    }
+    .status-success {
+      color: #4caf50;
+    }
+    .status-error {
+      color: #f44336;
+    }
+    .cluster-icon {
+      background: #1976d2;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <button class="refresh-btn" onclick="loadMarkers()" title="Aggiorna la mappa">
+    <i class="fas fa-sync-alt"></i> Aggiorna
+  </button>
+  <div class="status-bar" id="statusBar" style="display: none;">
+    <i class="fas fa-circle-notch fa-spin"></i>
+    <span id="statusText">Caricamento in corso...</span>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script>
+    // Inizializzazione mappa con migliori impostazioni predefinite
+    const map = L.map('map', {
+      preferCanvas: true, // Migliora le prestazioni con molti marker
+      zoomControl: false // Aggiungeremo il nostro personalizzato
+    }).setView([45.5397, 10.2206], 10);
+
+    // Aggiungi controllo zoom personalizzato in basso a destra
+    L.control.zoom({
+      position: 'bottomright'
+    }).addTo(map);
+
+    // Layer mappa con migliori opzioni
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+      detectRetina: true
+    }).addTo(map);
+
+    // Cluster per gestire meglio molti marker
+    const markersCluster = L.markerClusterGroup({
+      maxClusterRadius: 60,
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: true,
+      iconCreateFunction: function(cluster) {
+        const count = cluster.getChildCount();
+        return L.divIcon({
+          html: `<div><span>${count}</span></div>`,
+          className: 'cluster-icon',
+          iconSize: L.point(40, 40)
+        });
+      }
+    });
+    map.addLayer(markersCluster);
+
+    let currentMarkers = [];
+    let autoRefreshInterval;
+    const statusBar = document.getElementById('statusBar');
+    const statusText = document.getElementById('statusText');
+    const statusIcon = statusBar.querySelector('i');
+
+    // Funzione per aggiornare la barra di stato
+    function updateStatus(type, message) {
+      statusBar.style.display = 'flex';
+      statusText.textContent = message;
+      
+      // Rimuovi tutte le classi di stato
+      statusIcon.className = 'fas';
+      statusBar.className = 'status-bar';
+      
+      switch(type) {
+        case 'loading':
+          statusIcon.classList.add('fa-circle-notch', 'fa-spin');
+          statusBar.classList.add('status-updating');
+          break;
+        case 'success':
+          statusIcon.classList.add('fa-check-circle');
+          statusBar.classList.add('status-success');
+          // Nascondi dopo 3 secondi
+          setTimeout(() => {
+            if (!statusBar.classList.contains('status-updating')) {
+              statusBar.style.display = 'none';
+            }
+          }, 3000);
+          break;
+        case 'error':
+          statusIcon.classList.add('fa-exclamation-circle');
+          statusBar.classList.add('status-error');
+          break;
+      }
+    }
+
+    // Funzione per formattare il contenuto del popup
+    function formatPopupContent(row) {
+      let content = `<div class="map-popup">
+        <b>${row.name || 'Nodo LoRa'}</b>`;
+      
+      if (row.node_type) content += `<p><i class="fas fa-microchip"></i> Tipo: ${row.node_type}</p>`;
+      if (row.frequency) content += `<p><i class="fas fa-wave-square"></i> Freq: ${row.frequency}</p>`;
+      if (row.desc) content += `<p><i class="fas fa-info-circle"></i> ${row.desc}</p>`;
+      
+      if (row.link) {
+        content += `<p><i class="fas fa-external-link-alt"></i> <a href="${row.link}" target="_blank">Maggiori informazioni</a></p>`;
+      }
+      
+      if (row.user) {
+        const username = row.user.startsWith('@') ? row.user : `@${row.user}`;
+        content += `<p><i class="fas fa-user"></i> Utente: <a href="https://t.me/${username.replace('@', '')}" target="_blank">${username}</a></p>`;
+      }
+      
+      // Aggiungi data ultimo aggiornamento se disponibile
+      if (row.last_update) {
+        content += `<p><i class="far fa-clock"></i> Aggiornato: ${formatDate(row.last_update)}</p>`;
+      }
+      
+      content += `</div>`;
+      return content;
+    }
+
+    // Funzione per formattare la data
+    function formatDate(dateString) {
+      if (!dateString) return 'N/D';
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleString('it-IT');
+      } catch {
+        return dateString;
+      }
+    }
+
+    // Funzione per analizzare il CSV con gestione delle virgole nei valori
+    function parseCSV(csvText) {
+      const lines = csvText.split('\n').filter(line => line.trim() !== '');
+      if (lines.length < 2) return [];
+      
+      const headers = lines[0].split(',').map(h => h.trim());
+      const results = [];
+      
+      // Regex migliorata per gestire valori con virgole e caratteri speciali
+      const csvRegex = /(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))/g;
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        const values = [];
+        let match;
+        
+        // Reset regex e trova tutti i match
+        csvRegex.lastIndex = 0;
+        while ((match = csvRegex.exec(line)) !== null) {
+          if (match.index === csvRegex.lastIndex) {
+            csvRegex.lastIndex++;
+          }
+          
+          let value = match[0];
+          if (value.startsWith(',')) {
+            value = value.substring(1);
+          }
+          
+          // Gestione dei valori tra virgolette
+          if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.substring(1, value.length - 1)
+                      .replace(/""/g, '"'); // Sostituisce doppie virgolette
+          }
+          
+          values.push(value.trim());
+        }
+        
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = (values[index] || '').trim();
+        });
+        
+        results.push(row);
+      }
+      
+      return results;
+    }
+
+// Funzione per caricare i marker
+async function loadMarkers() {
+  updateStatus('loading', 'Caricamento dati in corso...');
+  
+  try {
+    const response = await fetch('/shared/dati.csv?t=' + Date.now());
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
+    
+    const csv = await response.text();
+    const data = parseCSV(csv);
+    
+    // Memorizza la vista corrente prima di aggiornare i marker
+    const currentZoom = map.getZoom();
+    const currentCenter = map.getCenter();
+    
+    // Rimuovi i vecchi marker
+    markersCluster.clearLayers();
+    currentMarkers = [];
+    
+    // Filtra e aggiungi i nuovi marker
+    const validMarkers = data.filter(row => {
+      const lat = parseFloat(row.lat);
+      const lon = parseFloat(row.lon);
+      return !isNaN(lat) && !isNaN(lon);
+    });
+    
+    if (validMarkers.length === 0) {
+      updateStatus('error', 'Nessun dato valido trovato');
+      return;
+    }
+    
+    validMarkers.forEach(row => {
+      const lat = parseFloat(row.lat);
+      const lon = parseFloat(row.lon);
+      
+      const marker = L.marker([lat, lon], {
+        title: row.name || 'Nodo LoRa',
+        riseOnHover: true
+      }).bindPopup(formatPopupContent(row));
+      
+      currentMarkers.push(marker);
+    });
+    
+    markersCluster.addLayers(currentMarkers);
+    
+    // Ripristina la vista precedente invece di zoommare sui marker
+    map.setView(currentCenter, currentZoom);
+    
+    updateStatus('success', `Caricati ${validMarkers.length} nodi`);
+    
+  } catch (error) {
+    console.error("Errore nel caricamento:", error);
+    updateStatus('error', `Errore: ${error.message}`);
+  }
+}
+
+    // Gestione dell'aggiornamento automatico
+    function setupAutoRefresh(interval = 30000) {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+      }
+      autoRefreshInterval = setInterval(loadMarkers, interval);
+    }
+
+    // Carica i marker all'avvio e imposta l'aggiornamento automatico
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMarkers();
+      setupAutoRefresh();
+    });
+
+    // Pulsante per forzare l'aggiornamento
+    document.querySelector('.refresh-btn').addEventListener('click', () => {
+      loadMarkers();
+      // Resetta l'intervallo dopo un aggiornamento manuale
+      setupAutoRefresh();
+    });
+  </script>
+</body>
+</html>
