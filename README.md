@@ -13,6 +13,7 @@ Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Itali
 - **Filtri Avanzati** per frequenza e tipo di nodo
 - **Ricerca** per nome nodo con autocompletamento
 - **Condivisione** visualizzazione attuale con link copiabile
+- **Inserimento Nodi** tramite un semplice bot Telegram
 - **Dettagli Nodo** in modal popup
 - **Responsive Design** per mobile/desktop
 
