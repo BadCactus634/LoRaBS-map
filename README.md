@@ -83,6 +83,7 @@ I marker sono salvati in un file CSV con i seguenti campi:
 - [ ] [BOT] Invio annunci a tutti gli utenti
 - [ ] [BOT] Permettere agli utenti di votare i nodi più utili/affidabili
 - [ ] [BOT] Geofencing: Notifiche quando nuovi nodi vengono aggiunti nella tua area
+- [ ] [BOT] Invio notifica per conferma nodi inattivi ed eventuale rimozione
 - [ ] Banner "Nodi aggiunti oggi"
 - [ ] Implementare inserimento layer marker da progetto LoRa Italia
 - [ ] Creazione API per integrazione con MapForHam
