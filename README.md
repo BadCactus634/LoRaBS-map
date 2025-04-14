@@ -1,7 +1,7 @@
 # 🌍 Mappa Interattiva Nodi LoRa Brescia
 
 [![Licenza](https://img.shields.io/badge/Licenza-MIT-green.svg)](LICENSE)
-[![Versione](https://img.shields.io/badge/Versione-2.0.0-blue.svg)](https://github.com/tuusername/lorabs-map/releases)
+[![Versione](https://img.shields.io/badge/Versione-2.0.0-blue.svg)](https://github.com/BadCactus634/LoRaBS-map)
 
 Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, ..), con funzionalità avanzate di filtraggio e condivisione.
 
