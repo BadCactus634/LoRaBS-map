@@ -5,7 +5,7 @@
 
 Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, ..), con funzionalità avanzate di filtraggio e condivisione.
 
-![Visita la Mappa](https://map.natmus.net)
+[Visita la Mappa](https://map.natmus.net)
 
 ## ✨ Funzionalità
 
