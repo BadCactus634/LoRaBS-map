@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <title>Mappa LoRa Brescia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mappa interattiva dei nodi LoRaWAN nella provincia di Brescia">
+</div>
+</head>
+<body>
+  <!-- Header Banner -->
+  <div class="header-banner">
+    <div class="header-title">
+      <img src="logo.png" alt="LoRa Brescia Logo">
+      <h1>Mappa - LoRa Brescia</h1>
+    </div>
+    <div class="header-stats" id="headerStats">
+      <span><i class="fas fa-map-marker-alt"></i> <span id="nodeCount">0</span> nodi</span>
+      <span><i class="fas fa-users"></i> <span id="userCount">0</span> utenti</span>
+      <span><i class="fas fa-clock"></i> <span id="lastUpdate">N/D</span></span>
+    </div>
+  </div>
+
+  <div id="map"></div>
+  
+<button class="refresh-btn filter-btn" onclick="loadMarkers()" title="Aggiorna la mappa">
+  <i class="fas fa-sync-alt"></i> Aggiorna mappa
+</button>
+  
+  <div class="status-bar" id="statusBar" style="display: none;">
+    <i class="fas fa-circle-notch fa-spin"></i>
+    <span id="statusText">Caricamento in corso...</span>
+  </div>
+
+<!-- Container per controlli (filtri + ricerca) -->
+<div class="controls-container">
+  <!-- Filtri -->
+  <div class="filters-container">
+    <div class="filter-group">
+      <select id="frequency-filter">
+        <option value="">Tutte le frequenze</option>
+        <option value="433 MHz">433 MHz</option>
+        <option value="868 MHz">868 MHz</option>
+      </select>
+    </div>
+    
+    <select id="type-filter">
+      <option value="">Tutti i tipi</option>
+      <option value="Mehstastic">Mehstastic</option>
+      <option value="MeshCore">MeshCore</option>
+      <option value="Altro">Altro</option>
+    </select>
+    
+    <button id="reset-filters" class="filter-btn">
+      <i class="fas fa-times"></i> Resetta
+    </button>
+  </div>
+  
+  <!-- Casella di ricerca -->
+  <div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Cerca nodo per nome...">
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+<!-- Pulsante di condivisione -->
+<button id="share-btn" class="share-btn" title="Copia link posizione corrente">
+  <i class="fas fa-link"></i> Condividi
+</button>
+  
+  <!-- Footer Banner -->
+  <div class="footer-banner">
+    Progetto LoRa Brescia
+    <span class="version-badge">v2.0</span>
+    | <a href="https://github.com/BadCactus634/LoRaBS-map" style="color: #4fc3f7;" target="_blank">GitHub</a>
+    | <a href="https://t.me/+GpHyVTecpz0zY2Vk" style="color: #4fc3f7;" target="_blank">Contatti</a>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script src="pagina.js"></script>
+</body>
+</html>

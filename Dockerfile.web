@@ -1,0 +1,13 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Installa http-server
+RUN npm install -g http-server
+
+# Copia SOLO i file necessari (escludi shared)
+COPY web /app
+
+# Esponi la porta e avvia
+EXPOSE 8080
+CMD ["http-server", "/app", "-p", "8080", "--cors"]
