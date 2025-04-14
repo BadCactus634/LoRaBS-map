@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.web
     ports:
-      - "8086:8080"
+      - "8085:8080"
     volumes:
       - ./web:/app
       - ./shared:/app/shared
@@ -20,7 +20,7 @@ services:
       - ./bot:/app
       - ./shared:/app/shared
     environment:
-      - BOT_TOKEN=7882564456:AAEAV2hjSnVHAdz384XcvA7REjBfabNWst0  # imposta anche il tuo token in locale oppure in un .env
+      - BOT_TOKEN=xxxxx  # imposta anche il tuo token in locale oppure in un .env
     depends_on:
       - web
     restart: unless-stopped
