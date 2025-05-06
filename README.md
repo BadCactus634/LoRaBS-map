@@ -29,8 +29,9 @@ lorabs-map/
 ├── bot/                  # Bot Telegram
 │   ├── bot.py            
 │   └── log_state.json    # Memorizzazione dello stato dei log (attivo/disattivo)
-├── LICENSE
-└── README.md
+├── docker-compose.yml
+├── Dockerfile.bot
+├── Dockerfile.web
 ```
 
 ## 🤖 Integrazione Bot Telegram
@@ -94,8 +95,8 @@ I marker sono salvati in un file CSV con i seguenti campi:
 - [ ] Layer di copertura nodo stimata
 - [ ] Dark Mode
 
-### Requisiti tecnici
-
+### Compilazione
+TODO...
 - Python 3.8+
 - Librerie Python:
   - `python-telegram-bot`
