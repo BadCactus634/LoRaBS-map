@@ -86,9 +86,12 @@ I marker sono salvati in un file CSV con i seguenti campi:
 - [ ] [BOT] Invio notifica per conferma nodi inattivi ed eventuale rimozione
 - [ ] [BOT] Loggare le azioni del bot in un file di log
 - [ ] Banner "Nodi aggiunti oggi"
-- [ ] Implementare inserimento layer marker da progetto LoRa Italia
+- [ ] Finestra di log (aggiunta, rimozione, rinomino marker)
+- [ ] Implementare inserimento layer marker da API progetto LoRa Italia
+- [ ] Implementare inserimento layer marker da API meshcore
 - [ ] Creazione API per integrazione con MapForHam
-- [ ] Modal Info Avanzate (UI)
+- [ ] Modal Info Avanzate (UI): icone custom e colori differenti per repeater meshcore
+- [ ] Layer di copertura nodo stimata
 - [ ] Dark Mode
 
 ### Requisiti tecnici
