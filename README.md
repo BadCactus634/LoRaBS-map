@@ -3,7 +3,7 @@
 [![Licenza](https://img.shields.io/badge/Licenza-MIT-green.svg)](LICENSE)
 [![Versione](https://img.shields.io/badge/Versione-2.0.0-blue.svg)](https://github.com/BadCactus634/LoRaBS-map)
 
-Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, ..), con funzionalità avanzate di filtraggio e condivisione.
+Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, ..), con funzionalità avanzate di filtraggio, cache e condivisione.
 
 [Visita la Mappa](https://map.natmus.net)
 
@@ -43,7 +43,7 @@ Il codice include un bot Telegram per inserire i nodi nella mappa con funzionali
 - ✏️ Rinomina marker esistenti
 - 🗑️ Elimina marker
 - 📍 Visualizza la lista dei tuoi marker
-- 📊 Statistiche per admin
+- 📊 Statistiche e comandi per admin
 - 🔒 Controllo degli accessi e limiti per utente
 
 ### Limitazioni
@@ -81,9 +81,9 @@ I marker sono salvati in un file CSV con i seguenti campi:
 | `/admin` | Menu amministratore (solo admin) |
 
 ## To-Do
-- [ ] [BOT] Invio annunci a tutti gli utenti
-- [ ] [BOT] Permettere agli utenti di votare i nodi più utili/affidabili
-- [ ] [BOT] Geofencing: Notifiche quando nuovi nodi vengono aggiunti nella tua area
+- [x] [BOT] Invio annunci a tutti gli utenti
+- [x] [BOT] Gestione DB da Telegram per admin
+- [x] [BOT] Notifiche quando nuovi nodi vengono aggiunti nella tua area
 - [ ] [BOT] Invio notifica per conferma nodi inattivi ed eventuale rimozione
 - [ ] [BOT] Loggare le azioni del bot in un file di log
 - [ ] Banner "Nodi aggiunti oggi"
