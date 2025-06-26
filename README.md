@@ -93,6 +93,7 @@ I marker sono salvati in un file CSV con i seguenti campi:
 - [ ] Creazione API per integrazione con MapForHam
 - [ ] Modal Info Avanzate (UI): icone custom e colori differenti per repeater meshcore
 - [ ] Layer di copertura nodo stimata
+- [ ] Aggiunta avvisi meteorologici alla pagina web da [MeteoAlarm](https://meteoalarm.org/en/live/)
 - [ ] Dark Mode
 
 ### Compilazione
