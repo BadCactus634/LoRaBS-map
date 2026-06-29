@@ -3,8 +3,8 @@
 [![Licenza](https://img.shields.io/badge/Licenza-MIT-green.svg)](LICENSE)
 [![Versione](https://img.shields.io/badge/Versione-2.0.0-blue.svg)](https://github.com/BadCactus634/LoRaBS-map)
 
-Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, ..), con funzionalità avanzate di filtraggio, cache e condivisione.
-### ATTENZIONE: Lo sviluppo di questo progetto si è fermato. Una versione aggiornata di questo progetto è stata utilizzata per la mappa italiana dedicata a MeshCore disponibile [in questa repositoy](https://github.com/BadCactus634/MeshCoreIT-map). Se siete interessati a replicare il progetto vi consiglio di dare un'occhiata di là, perché questo progetto ha diversi bug che sono stati risolti nei rilasci dedicati alla mappa italiana di MeshCore.
+Una mappa interattiva per visualizzare i nodi di progetti diversi in tutta Italia (Meshtastic, MeshCore, APRS LoRa, ..), con funzionalità avanzate di filtraggio, cache e condivisione.
+### ATTENZIONE: Lo sviluppo di questo progetto si è fermato. Una [versione successiva](https://github.com/BadCactus634/MeshCoreIT-map) di questo progetto è stata utilizzata come base per sviluppare la [mappa italiana dei nodi MeshCore](https://nodi.meshcoreitalia.it/).
 
 ## ✨ Funzionalità
 
